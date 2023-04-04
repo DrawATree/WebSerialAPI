@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let port;
+        async function connect() {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate : 9600 });
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function send() {
+            try {
+                const encoder = new TextEncoder();
+                const writer = port.writable.getWriter();
+                let count = prompt('Number!: ');
+                await writer.write(encoder.encode(count));
+                writer.releaseLock();
+            } catch (error) {
+                alert(error.message + "\n No Port selected.");
+            }
+        }
+        
+    </script>
+
+    <h1>Testing the connection with serial</h1>
+    <button onclick="connect()">connect</button>
+    <button onclick="send()">send</button>
+</body>
+</html>
